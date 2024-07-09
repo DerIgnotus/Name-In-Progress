@@ -39,7 +39,6 @@ public class NPC : MonoBehaviour
     {
         if (questIsComplete(quest[currentQuest]))
         {
-            Debug.Log("Quest Complete");
             questInProgress = false;
             gameManager.quests.Remove(quest[currentQuest]);
             gameManager.npcs.Remove(this);
@@ -70,7 +69,6 @@ public class NPC : MonoBehaviour
         if (quest[currentQuest].GetObjective().whatRobotsMine == whatWasMined)
         {
             robotsMineMinusThis--;
-            Debug.Log(mineMinusThis + " " + robotsMineMinusThis);
         }
     }
 
