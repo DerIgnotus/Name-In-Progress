@@ -15,12 +15,14 @@ public class InventoryButtons : MonoBehaviour
     public void OpenItems()
     {
         gameManager.RemoveOres();
+        gameManager.RemoveInventory();
         gameManager.DisplayInventory();
     }
 
     public void OpenOres()
     {
         gameManager.RemoveInventory();
+        gameManager.RemoveOres();
         gameManager.DisplayOres();
     }
 

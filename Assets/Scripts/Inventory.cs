@@ -5,18 +5,46 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    [Header("ItemThings")]
     [SerializeField] private Transform itemPrefab;
     [SerializeField] private Transform whereInstantiateItems;
+
+    [Header("OreThings")]
     [SerializeField] private Transform orePrefab;
     [SerializeField] private Transform whereInstantiateOres;
 
+    [Header("QuestThings")]
+    [SerializeField] private Transform questTexts;
+    [SerializeField] private Transform questPrefab;
+    [SerializeField] private Transform whereInstantiateQuests;
+    [SerializeField] private Transform questTransform;
+
+    [Header("RobotThings")]
     [SerializeField] private Transform robotPrefab;
     [SerializeField] private Transform whereInstantiateRobots;
+    [SerializeField] private Transform robotsDisplay;
+
 
     [SerializeField] private Transform inventory;
 
     private Dictionary<string, ItemScript> items = new Dictionary<string, ItemScript>();
     private Dictionary<string, OreScript> ores = new Dictionary<string, OreScript>();
+
+    private GameManager gameManager;
+
+
+
+
+    private void Start()
+    {
+        gameManager = transform.GetComponent<GameManager>();
+    }
+
+
+    ///////////////////////////////////////////////////////////////
+    ///                         ITEMS                           ///
+    ///////////////////////////////////////////////////////////////
+
 
     public void AddItem(Item newItem, int count)
     {
@@ -47,11 +75,6 @@ public class Inventory : MonoBehaviour
             items[itemName] = new ItemScript(newItem, count);
         }
         UpdateItems();
-    }
-
-    public Transform GetInventoryTransform()
-    {
-        return inventory;
     }
 
     public bool HasItem(string itemName, int count)
@@ -114,6 +137,19 @@ public class Inventory : MonoBehaviour
             RemoveItems();
         }
     }
+
+    public Transform GetInventoryTransform()
+    {
+        return inventory;
+    }
+
+
+
+    ///////////////////////////////////////////////////////////////
+    ///                         ORES                            ///
+    ///////////////////////////////////////////////////////////////
+
+
 
     public void AddOre(OreScriptableObject newOre, int count)
     {
@@ -207,6 +243,15 @@ public class Inventory : MonoBehaviour
         }
     }
 
+
+
+
+    ///////////////////////////////////////////////////////////////
+    ///                         ROBOTS                          ///
+    ///////////////////////////////////////////////////////////////
+
+
+
     public void DisplayRobots(List<Robot> robots)
     {
         int i = 0;
@@ -245,5 +290,104 @@ public class Inventory : MonoBehaviour
         {
             Destroy(robot.gameObject);
         }
+    }
+
+    public void UpdateRobotDisplay(List<Robot> robots)
+    {
+        if (whereInstantiateRobots.gameObject.activeSelf)
+        {
+            RemoveRobots();
+            DisplayRobots(robots);
+        }
+        else
+        {
+            RemoveRobots();
+        }
+    }
+
+    public void SetRobotsDisplay(bool active)
+    {
+        robotsDisplay.gameObject.SetActive(active);
+    }
+
+    public GameObject GetRobotsDisplay()
+    {
+        return robotsDisplay.gameObject;
+    }
+
+
+
+    ///////////////////////////////////////////////////////////////
+    ///                         QUESTS                          ///
+    ///////////////////////////////////////////////////////////////
+
+
+
+    public void DisplayQuests()
+    {
+        int i = 0;
+        List<Quest> quests = GetQuests();
+        List<NPC> npcs = GetNPCs();
+
+        questTransform.gameObject.SetActive(true);
+
+        foreach (Quest quest in quests)
+        {
+            GameObject questObject = Instantiate(questPrefab.gameObject, whereInstantiateQuests);
+
+            var questPlayerMined = quest.GetObjective().mine - npcs[i].mineMinusThis;
+            var questRobotMined = quest.GetObjective().robotsMine - npcs[i].robotsMineMinusThis;
+
+            var questText = questObject.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>();
+            questText.text = quest.GetQuestName();
+
+            if (quest.GetObjective().mine > 0)
+            {
+                var questText1 = Instantiate(questTexts.gameObject, questObject.transform);
+                questText1.GetComponent<TMPro.TextMeshProUGUI>().text = "Mine " + quest.GetObjective().mine + " " + quest.GetObjective().whatToMine;
+                questText1.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = questPlayerMined.ToString() + "/" + quest.GetObjective().mine;
+            }
+            if (quest.GetObjective().robotsMine > 0)
+            {
+                var questText2 = Instantiate(questTexts.gameObject, questObject.transform);
+                questText2.GetComponent<TMPro.TextMeshProUGUI>().text = "Let Robots mine " + quest.GetObjective().robotsMine + " " + quest.GetObjective().whatRobotsMine;
+                questText2.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = questRobotMined.ToString() + "/" + quest.GetObjective().robotsMine;
+            }
+
+            i++;
+        }
+    }
+
+    public void RemoveQuests()
+    {
+        questTransform.gameObject.SetActive(false);
+
+        foreach (Transform quest in whereInstantiateQuests)
+        {
+            Destroy(quest.gameObject);
+        }
+    }
+
+    public void UpdateQuests()
+    {
+        if (questTransform.gameObject.activeSelf)
+        {
+            RemoveQuests();
+            DisplayQuests();
+        }
+        else
+        {
+            RemoveQuests();
+        }
+    }
+
+    private List<Quest> GetQuests()
+    {
+        return gameManager.quests;
+    }
+
+    public List<NPC> GetNPCs()
+    {
+        return gameManager.npcs;
     }
 }
