@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("GAME STARTS!!!");
+
         npcsParent = GameObject.Find("NPCs").transform;
 
         canMove = true;
