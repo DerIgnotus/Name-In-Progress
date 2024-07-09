@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1291410228495784432
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_Name
+      value: Robot_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5975616670799120887}
+  m_SourcePrefab: {fileID: 100100000, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+--- !u!1 &2102454331956602017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+  m_PrefabInstance: {fileID: 1291410228495784432}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5975616670799120887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102454331956602017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de869d9b1d2ec394893aaea63915e6f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  harvestSpeed: 2
+  harvestAmount: 1
+  harvestDamage: 1
+  miningLevel: 1
+  energyMax: 1
+  icon: {fileID: 21300000, guid: f75e2b1809ad796469251378de80ccb1, type: 3}
+  description: Basic Robot. Doing everything slow and bad!
+  rarity: Common
+  level: 1
+  circleRadiusMin: 1.25
+  circleRadiusMax: 2.5
+  circleSpeedMax: 2.5
+  circleSpeedMin: 1
+  verticalSpeedMax: 2.25
+  verticalSpeedMin: 1
+  verticalAmplitude: 0.4
