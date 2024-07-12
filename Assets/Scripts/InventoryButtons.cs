@@ -6,6 +6,7 @@ public class InventoryButtons : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
     public int whichRobot { get; set; }
+    public int whichAutoMiner { get; set; }
 
     private void Start()
     {
@@ -53,5 +54,34 @@ public class InventoryButtons : MonoBehaviour
             oven.AddOre(ore, oreScript.Count);
             gameManager.RemoveOre(transform.GetChild(1).name, oreScript.Count, gameManager.GetOres());
         }
+    }
+
+    public void OpenRobots()
+    {
+        gameManager.RemoveAutoMiners();
+        gameManager.DisplayRobots();
+    }
+
+    public void OpenAutoMiners()
+    {
+        gameManager.RemoveRobots();
+        gameManager.DisplayAutoMiners();
+    }
+
+    public void BuyAutoMiner()
+    {
+        if (gameManager.maxAutoMiners <= gameManager.autoMiners.Count) return;
+
+        gameManager.AddAutoMiner();
+        gameManager.UpdateAutoMinerDisplay();
+    }
+
+    public void SetAutoMinerTarget()
+    {
+        AutoMiner autoMiner = gameManager.autoMiners[whichAutoMiner];
+
+        autoMiner.targetedOre = gameManager.currentOre.GetComponent<Ore>();
+
+        gameManager.UpdateAutoMinerDisplay();
     }
 }

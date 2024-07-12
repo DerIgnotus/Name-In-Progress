@@ -19,10 +19,13 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform whereInstantiateQuests;
     [SerializeField] private Transform questTransform;
 
-    [Header("RobotThings")]
+    [Header("OreThings")]
     [SerializeField] private Transform robotPrefab;
+    [SerializeField] private Transform autoMinerPrefab;
     [SerializeField] private Transform whereInstantiateRobots;
-    [SerializeField] private Transform robotsDisplay;
+    [SerializeField] private Transform whereInstantiateAutoMiners;
+    [SerializeField] private Transform oreDisplay;
+    [SerializeField] private Transform buyAutoMinerButton;
 
 
     [SerializeField] private Transform inventory;
@@ -260,6 +263,8 @@ public class Inventory : MonoBehaviour
 
     public void DisplayRobots(List<Robot> robots)
     {
+        oreDisplay.GetChild(0).gameObject.SetActive(true);
+
         int i = 0;
 
         foreach (Transform child in whereInstantiateRobots)
@@ -292,6 +297,8 @@ public class Inventory : MonoBehaviour
 
     public void RemoveRobots()
     {
+        oreDisplay.GetChild(0).gameObject.SetActive(false);
+
         foreach (Transform robot in whereInstantiateRobots)
         {
             Destroy(robot.gameObject);
@@ -300,7 +307,7 @@ public class Inventory : MonoBehaviour
 
     public void UpdateRobotDisplay(List<Robot> robots)
     {
-        if (whereInstantiateRobots.gameObject.activeSelf)
+        if (oreDisplay.GetChild(0).gameObject.activeSelf)
         {
             RemoveRobots();
             DisplayRobots(robots);
@@ -313,12 +320,80 @@ public class Inventory : MonoBehaviour
 
     public void SetRobotsDisplay(bool active)
     {
-        robotsDisplay.gameObject.SetActive(active);
+        oreDisplay.gameObject.SetActive(active);
     }
 
     public GameObject GetRobotsDisplay()
     {
-        return robotsDisplay.gameObject;
+        return oreDisplay.gameObject;
+    }
+
+    public void DisplayAutoMiners(List<AutoMiner> autoMiners)
+    {
+        oreDisplay.GetChild(1).gameObject.SetActive(true);
+
+        int i = 0;
+
+        foreach (Transform child in whereInstantiateAutoMiners)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (AutoMiner autoMiner in autoMiners)
+        {
+
+            GameObject autoMinerObject = Instantiate(autoMinerPrefab.gameObject, whereInstantiateAutoMiners);
+            Transform autoMinerTransform = autoMinerObject.transform;
+
+            autoMinerTransform.GetChild(0).GetComponent<Image>().sprite = autoMiner.GetSprite();
+            autoMinerTransform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "Auto Miner Level: " + autoMiner.GetAutoMinerLevel();
+            autoMinerTransform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = "Auto Miner Production Speed: " + autoMiner.GetAutoMinerProductionSpeed();
+            autoMinerTransform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().text = "Auto Miner Production Rate: " + autoMiner.GetAutoMinerProductionRate();
+
+            if (autoMiner.targetedOre != null)
+            {
+                autoMinerTransform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().text = "Auto Miner mining: " + autoMiner.targetedOre.name;
+            }
+            else
+            {
+                autoMinerTransform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().text = "Auto Miner not mining";
+            }
+
+            autoMinerObject.GetComponent<InventoryButtons>().whichAutoMiner = i;
+            i++;
+        }
+
+        Transform button = Instantiate(buyAutoMinerButton.gameObject, whereInstantiateAutoMiners).transform;
+
+        button.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Buy Auto Miner: " + gameManager.GetAutoMinerPrice();
+    }
+
+    public void RemoveAutoMiners()
+    {
+        oreDisplay.GetChild(1).gameObject.SetActive(false);
+
+        foreach (Transform autoMiner in whereInstantiateAutoMiners)
+        {
+            Destroy(autoMiner.gameObject);
+        }
+    }
+
+    public void UpdateAutoMinerDisplay(List<AutoMiner> autoMiners)
+    {
+        if (oreDisplay.GetChild(1).gameObject.activeSelf)
+        {
+            RemoveAutoMiners();
+            DisplayAutoMiners(autoMiners);
+        }
+        else
+        {
+            RemoveAutoMiners();
+        }
+    }
+
+    public void SetOreDisplay(bool active)
+    {
+        oreDisplay.gameObject.SetActive(active);
     }
 
 

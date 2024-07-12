@@ -113,6 +113,26 @@ public class Ore : MonoBehaviour
         currentHarvestTime = harvestTime;
     }
 
+    public void HarvestOreOwnHarvestTimer(int harvestAmount)
+    {
+        oreHarvested.Invoke(oreName);
+
+        gameManager.AddItem(item_1, 1 * harvestAmount);
+
+        gameManager.updateInventory.Invoke();
+        gameManager.updateQuests.Invoke();
+
+        if (!gameManager.currentOven) return;
+
+        foreach (Oven oven in gameManager.ovens)
+        {
+            if (oven.AddOre(ore_1, 1 * harvestAmount))
+            {
+                break;
+            }
+        }
+    }
+
     public bool CanMine()
     {
         return currentUntilNextMine <= 0;

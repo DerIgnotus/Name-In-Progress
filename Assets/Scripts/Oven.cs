@@ -58,9 +58,19 @@ public class Oven : MonoBehaviour
         }
     }
 
-    public void AddOre(OreScriptableObject ore, int count)
+    public bool AddOre(OreScriptableObject ore, int count)
     {
-        if (gameManager.HasOre(ore.name, count, ores)) gameManager.AddOre(ore, count, ores);
-        else if (ores.Count < maxOres) gameManager.AddOre(ore, count, ores);
+        if (gameManager.HasOre(ore.name, count, ores))
+        {
+            gameManager.AddOre(ore, count, ores);
+            return true;
+        }
+        else if (ores.Count < maxOres)
+        {
+            gameManager.AddOre(ore, count, ores);
+            return true;
+        }
+
+        return false;
     }
 }

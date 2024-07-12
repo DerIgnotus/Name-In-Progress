@@ -53,6 +53,11 @@ public class Player : MonoBehaviour
         {
             PressedEscape();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameManager.AddMoney(50);
+        }
     }
 
     private void InstantiateRobot()
@@ -69,13 +74,20 @@ public class Player : MonoBehaviour
 
         if (gameManager.GetRobotsDisplay().activeSelf)
         {
-            gameManager.GetRobotsDisplay().SetActive(false);
+            gameManager.SetOreDisplay(false);
+
+            gameManager.UpdateAutoMinerDisplay();
+            gameManager.UpdateRobotDisplay();
+
             gameManager.SetCanMove(true);
         }
         else
         {
-            gameManager.GetRobotsDisplay().SetActive(true);
-            gameManager.DisplayRobots();
+            gameManager.SetOreDisplay(true);
+
+            gameManager.UpdateAutoMinerDisplay();
+            gameManager.UpdateRobotDisplay();
+
             gameManager.SetCanMove(false);
         }
     }
@@ -168,6 +180,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             gameManager.currentOven = oven;
+
+            if (!gameManager.ovens.Contains(oven.GetComponent<Oven>()))
+            {
+                gameManager.ovens.Add(oven.GetComponent<Oven>());
+            }
 
             if (gameManager.GetInventory().gameObject.activeSelf)
             {

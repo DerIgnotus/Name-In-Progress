@@ -7,15 +7,21 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Transform moneyText;
     [SerializeField] private Inventory inventory;
+    [SerializeField] private GameObject autoMinerPrefab;
+    [SerializeField] private int[] autoMinerPrices;
 
     public int money { get; private set; }
     public NPC currentNPC { get; set; }
     public List<Quest> quests { get; set; } = new List<Quest>();
     public List<NPC> npcs { get; set; } = new List<NPC>();
     public List<Robot> robots { get; set; } = new List<Robot>();
+    public List<AutoMiner> autoMiners { get; set; } = new List<AutoMiner>();
+    public List<Oven> ovens { get; set; } = new List<Oven>();
     public Transform npcsParent { get; set; }
     public Transform currentOre { get; set; }
     public Transform currentOven { get; set; }
+    public int maxAutoMiners { get; set; } = 3;
+    private int currentAutoMiners = 0;
 
     private bool canMove = true;
 
@@ -147,7 +153,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    // ROBOTS //
+    // ORES //
 
     public void DisplayRobots()
     {
@@ -167,6 +173,49 @@ public class GameManager : MonoBehaviour
     public void UpdateRobotDisplay()
     {
         inventory.UpdateRobotDisplay(robots);
+    }
+
+    public void RemoveRobots()
+    {
+        inventory.RemoveRobots();
+    }
+
+    public void DisplayAutoMiners()
+    {
+        inventory.DisplayAutoMiners(autoMiners);
+    }
+
+    public void RemoveAutoMiners()
+    {
+        inventory.RemoveAutoMiners();
+    }
+
+    public void UpdateAutoMinerDisplay()
+    {
+        inventory.UpdateAutoMinerDisplay(autoMiners);
+    }
+
+    public int GetAutoMinerPrice()
+    {
+        return autoMinerPrices[currentAutoMiners];
+    }
+
+    public void AddAutoMiner()
+    {
+        if (money >= GetAutoMinerPrice())
+        {
+            AddMoney(-GetAutoMinerPrice());
+
+            AutoMiner autoMiner = Instantiate(autoMinerPrefab, GameObject.Find("AutoMiners").transform.GetChild(currentAutoMiners)).GetComponent<AutoMiner>();
+            autoMiners.Add(autoMiner);
+
+            currentAutoMiners++;
+        }
+    }
+
+    public void SetOreDisplay(bool active)
+    {
+        inventory.SetOreDisplay(active);
     }
 
 
