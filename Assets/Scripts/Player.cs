@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Transform mineText;
     [SerializeField] private Transform npcText;
+    [SerializeField] private Transform ovenText;
     [SerializeField] private Transform bgTransform;
 
     [SerializeField] private GameObject robotPrefab;
@@ -114,12 +115,14 @@ public class Player : MonoBehaviour
     private Transform LookingAt()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 2f))
+
+        if (Physics.Raycast(transform.GetChild(2).position, transform.GetChild(2).forward, out hit, 2f))
         {
             switch (hit.collider.tag)
             {
                 case "Ore":
                     npcText.gameObject.SetActive(false);
+                    ovenText.gameObject.SetActive(false);
                     mineText.gameObject.SetActive(true);
 
                     ore = hit.collider.transform;
@@ -130,15 +133,25 @@ public class Player : MonoBehaviour
                     return hit.transform;
                 case "Npc":
                     mineText.gameObject.SetActive(false);
+                    ovenText.gameObject.SetActive(false);
                     npcText.gameObject.SetActive(true);
 
                     LookingAtNPC(hit);
+
+                    return hit.transform;
+                case "Oven":
+                    mineText.gameObject.SetActive(false);
+                    npcText.gameObject.SetActive(false);
+                    ovenText.gameObject.SetActive(true);
+
+                    LookingAtOven(hit.transform);
 
                     return hit.transform;
                 default:
                     ore = null;
                     mineText.gameObject.SetActive(false);
                     npcText.gameObject.SetActive(false);
+                    ovenText.gameObject.SetActive(false);
 
                     return null;
             }
@@ -150,10 +163,38 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void LookingAtOven(Transform oven)
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            gameManager.currentOven = oven;
+
+            if (gameManager.GetInventory().gameObject.activeSelf)
+            {
+                gameManager.SetInventory(false);
+
+                gameManager.DisplayInventory();
+                gameManager.RemoveOres();
+
+                gameManager.SetCanMove(true);
+            }
+            else
+            {
+                gameManager.SetInventory(true);
+
+                gameManager.RemoveInventory();
+                gameManager.DisplayOres();
+
+                gameManager.SetCanMove(false);
+            }
+        }
+    }
+
     private void AllUIOff()
     {
         mineText.gameObject.SetActive(false);
         npcText.gameObject.SetActive(false);
+        ovenText.gameObject.SetActive(false);
     }
 
     private void LookingAtOre()

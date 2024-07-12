@@ -18,3 +18,5 @@ MonoBehaviour:
   maxOreCount: 0
   oreSprite: {fileID: 21300000, guid: afc1f4ecbdcff7748a784b17612054ab, type: 3}
   oreDescription: Basic Ore, Pretty Cheap
+  smeltTime: 2
+  initialSmeltTime: 2

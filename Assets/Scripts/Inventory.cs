@@ -151,12 +151,12 @@ public class Inventory : MonoBehaviour
 
 
 
-    public void AddOre(OreScriptableObject newOre, int count)
+    public void AddOre(OreScriptableObject newOre, int count, Dictionary<string, OreScript> oresDict)
     {
         string oreName = newOre.GetOreName();
-        if (ores.ContainsKey(oreName))
+        if (oresDict.ContainsKey(oreName))
         {
-            OreScript existingOre = ores[oreName];
+            OreScript existingOre = oresDict[oreName];
             int currentCount = existingOre.Count;
 
             if (newOre.GetMaxOreCount() == 0)
@@ -177,29 +177,29 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            ores[oreName] = new OreScript(newOre, count);
+            oresDict[oreName] = new OreScript(newOre, count);
         }
         UpdateOres();
     }
 
-    public bool HasOre(string oreName, int count)
+    public bool HasOre(string oreName, int count, Dictionary<string, OreScript> oresDict)
     {
-        if (ores.ContainsKey(oreName))
+        if (oresDict.ContainsKey(oreName))
         {
-            return ores[oreName].Count >= count;
+            return oresDict[oreName].Count >= count;
         }
         return false;
     }
 
-    public void RemoveOre(string oreName, int count)
+    public void RemoveOre(string oreName, int count, Dictionary<string, OreScript> oresDict)
     {
-        if (ores.ContainsKey(oreName))
+        if (oresDict.ContainsKey(oreName))
         {
-            OreScript ore = ores[oreName];
+            OreScript ore = oresDict[oreName];
             ore.Count -= count;
             if (ore.Count <= 0)
             {
-                ores.Remove(oreName);
+                oresDict.Remove(oreName);
             }
             UpdateOres();
         }
@@ -215,6 +215,7 @@ public class Inventory : MonoBehaviour
             Transform oreTransform = oreObject.transform;
 
             oreTransform.GetChild(0).GetComponent<Image>().sprite = ore.OreScriptableObject.GetOreSprite();
+            oreTransform.GetChild(1).name = ore.OreScriptableObject.GetOreName();
             oreTransform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = ore.OreScriptableObject.GetOreName() + " x" + ore.Count;
             oreTransform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = ore.OreScriptableObject.GetOreDescription();
         }
@@ -241,6 +242,11 @@ public class Inventory : MonoBehaviour
         {
             RemoveOres();
         }
+    }
+
+    public Dictionary<string, OreScript> GetOres()
+    {
+        return ores;
     }
 
 

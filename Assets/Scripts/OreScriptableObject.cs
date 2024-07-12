@@ -11,6 +11,9 @@ public class OreScriptableObject : ScriptableObject
     [SerializeField] private int maxOreCount;
     [SerializeField] private Sprite oreSprite;
     [SerializeField] private string oreDescription;
+    [SerializeField] private float smeltTime;
+    [SerializeField] private float initialSmeltTime;
+
 
     public string GetOreName()
     {
@@ -45,5 +48,20 @@ public class OreScriptableObject : ScriptableObject
     public string GetOreDescription()
     {
         return oreDescription;
+    }
+
+    public float GetSmeltTime()
+    {
+        return smeltTime;
+    }
+
+    public void SetSmeltTime(float time)
+    {
+        smeltTime = time;
+    }
+
+    public float GetInitialSmeltTime()
+    {
+        return initialSmeltTime;
     }
 }

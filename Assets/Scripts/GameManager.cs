@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public List<Robot> robots { get; set; } = new List<Robot>();
     public Transform npcsParent { get; set; }
     public Transform currentOre { get; set; }
+    public Transform currentOven { get; set; }
 
     private bool canMove = true;
 
@@ -114,19 +115,19 @@ public class GameManager : MonoBehaviour
 
     // ORES //
 
-    public void AddOre(OreScriptableObject ore, int count)
+    public void AddOre(OreScriptableObject ore, int count, Dictionary<string, OreScript> oresDict)
     {
-        inventory.AddOre(ore, count);
+        inventory.AddOre(ore, count, oresDict);
     }
 
-    public bool HasOre(string oreName, int count)
+    public bool HasOre(string oreName, int count, Dictionary<string, OreScript> oresDict)
     {
-        return inventory.HasOre(oreName, count);
+        return inventory.HasOre(oreName, count, oresDict);
     }
 
-    public void RemoveOre(string oreName, int count)
+    public void RemoveOre(string oreName, int count, Dictionary<string, OreScript> oresDict)
     {
-        inventory.RemoveOre(oreName, count);
+        inventory.RemoveOre(oreName, count, oresDict);
     }
 
     public void DisplayOres()
@@ -137,6 +138,11 @@ public class GameManager : MonoBehaviour
     public void RemoveOres()
     {
         inventory.RemoveOres();
+    }
+
+    public Dictionary<string, OreScript> GetOres()
+    {
+        return inventory.GetOres();
     }
 
 

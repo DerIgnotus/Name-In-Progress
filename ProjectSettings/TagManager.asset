@@ -8,6 +8,7 @@ TagManager:
   - Ore
   - Tool
   - Npc
+  - Oven
   layers:
   - Default
   - TransparentFX

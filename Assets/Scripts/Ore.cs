@@ -103,7 +103,7 @@ public class Ore : MonoBehaviour
     private void HarvestOre()
     {
         gameManager.AddItem(item_1, 1);
-        gameManager.AddOre(ore_1, 1);
+        gameManager.AddOre(ore_1, 1, gameManager.GetOres());
 
         gameManager.updateInventory.Invoke();
         gameManager.updateOres.Invoke();
