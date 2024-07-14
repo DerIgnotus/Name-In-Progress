@@ -8,7 +8,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform moneyText;
     [SerializeField] private Inventory inventory;
     [SerializeField] private GameObject autoMinerPrefab;
-    [SerializeField] private int[] autoMinerPrices;
+    [SerializeField] private GameObject ovenPrefab;
+    [SerializeField] private GameObject robotPrefab;
+    [SerializeField] private List<Price> autoMinerPrices;
+    [SerializeField] private List<Price> ovenPrices;
+    [SerializeField] private List<Price> robotPrices;
 
     public int money { get; private set; }
     public NPC currentNPC { get; set; }
@@ -22,6 +26,11 @@ public class GameManager : MonoBehaviour
     public Transform currentOven { get; set; }
     public int maxAutoMiners { get; set; } = 3;
     private int currentAutoMiners = 0;
+    private int currentOvens = 0;
+    private int currentRobots = 0;
+    public bool updateShop { get; set; } = false;
+    public bool lookAroundRightClick { get; set; } = false;
+
 
     private bool canMove = true;
 
@@ -38,6 +47,8 @@ public class GameManager : MonoBehaviour
         updateQuests.AddListener(inventory.UpdateQuests);
         updateInventory.AddListener(inventory.UpdateItems);
         updateOres.AddListener(inventory.UpdateOres);
+
+        AddOven();
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -56,11 +67,17 @@ public class GameManager : MonoBehaviour
         if (canIMove)
         {
             canMove = true;
+
+            if (lookAroundRightClick) return;
+
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
             canMove = false;
+
+            if (lookAroundRightClick) return;
+
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -195,21 +212,42 @@ public class GameManager : MonoBehaviour
         inventory.UpdateAutoMinerDisplay(autoMiners);
     }
 
-    public int GetAutoMinerPrice()
+    public Price GetAutoMinerPrice()
     {
         return autoMinerPrices[currentAutoMiners];
     }
 
+    public Price GetRobotPrice()
+    {
+        return robotPrices[currentRobots];
+    }
+
+    public Price GetOvenPrice()
+    {
+        return ovenPrices[currentOvens];
+    }
+
     public void AddAutoMiner()
     {
-        if (money >= GetAutoMinerPrice())
+        if (CanBuy(GetAutoMinerPrice()))
         {
-            AddMoney(-GetAutoMinerPrice());
-
+            Buy(GetAutoMinerPrice());
             AutoMiner autoMiner = Instantiate(autoMinerPrefab, GameObject.Find("AutoMiners").transform.GetChild(currentAutoMiners)).GetComponent<AutoMiner>();
             autoMiners.Add(autoMiner);
 
             currentAutoMiners++;
+        }
+    }
+
+    public void AddRobot()
+    {
+        if (CanBuy(GetRobotPrice()))
+        {
+            Buy(GetRobotPrice());
+            Robot robot = Instantiate(robotPrefab, GameObject.Find("Robots").transform.GetChild(currentRobots)).GetComponent<Robot>();
+            robots.Add(robot);
+
+            currentRobots++;
         }
     }
 
@@ -244,6 +282,51 @@ public class GameManager : MonoBehaviour
     public void DisplayQuests()
     {
         inventory.DisplayQuests();
+    }
+
+
+    // BUY //
+
+    public bool CanBuy(Price price)
+    {
+        if (money < price.GetPriceData().price)
+        {
+            Debug.Log("Not enough money");
+            return false;
+        }
+
+        foreach (Price.ItemStruct item in price.GetPriceData().items)
+        {
+            if (!inventory.HasItem(item.item.GetItemName(), item.amount))
+            {
+                Debug.Log("Not enough items");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void Buy(Price price)
+    {
+        AddMoney(-price.GetPriceData().price);
+
+        foreach (Price.ItemStruct item in price.GetPriceData().items)
+        {
+            inventory.RemoveItem(item.item.GetItemName(), item.amount);
+        }
+    }
+
+    public void AddOven()
+    {
+        if (CanBuy(GetOvenPrice()))
+        {
+            Buy(GetOvenPrice());
+            Oven oven = Instantiate(ovenPrefab, GameObject.Find("Ovens").transform.GetChild(currentOvens)).GetComponent<Oven>();
+            ovens.Add(oven);
+
+            currentOvens++;
+        }
     }
 }
 

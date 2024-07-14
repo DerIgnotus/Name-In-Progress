@@ -365,7 +365,16 @@ public class Inventory : MonoBehaviour
 
         Transform button = Instantiate(buyAutoMinerButton.gameObject, whereInstantiateAutoMiners).transform;
 
-        button.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Buy Auto Miner: " + gameManager.GetAutoMinerPrice();
+
+
+        string text = "Buy Auto Miner:\nMoney: " + gameManager.GetAutoMinerPrice().GetPriceData().price;
+
+        foreach (Price.ItemStruct itemStruct in gameManager.GetAutoMinerPrice().GetPriceData().items)
+        {
+            text += $"\n{itemStruct.item.GetItemName()}: {itemStruct.amount}";
+        }
+
+        button.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = text;
     }
 
     public void RemoveAutoMiners()

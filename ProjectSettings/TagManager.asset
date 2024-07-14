@@ -9,6 +9,7 @@ TagManager:
   - Tool
   - Npc
   - Oven
+  - Shop
   layers:
   - Default
   - TransparentFX

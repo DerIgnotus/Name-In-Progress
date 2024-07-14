@@ -94,8 +94,21 @@ public class Player : MonoBehaviour
 
     private void PressedEscape()
     {
-        if (gameManager.GetCanMove()) gameManager.SetCanMove(false);
-        else gameManager.SetCanMove(true);
+        //if (gameManager.GetCanMove()) gameManager.SetCanMove(false);
+        //else gameManager.SetCanMove(true);
+
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            gameManager.lookAroundRightClick = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            gameManager.lookAroundRightClick = false;
+        }
     }
 
     private void OpenInventory()
@@ -159,6 +172,14 @@ public class Player : MonoBehaviour
                     LookingAtOven(hit.transform);
 
                     return hit.transform;
+                case "Shop":
+                    mineText.gameObject.SetActive(false);
+                    npcText.gameObject.SetActive(false);
+                    ovenText.gameObject.SetActive(true);
+
+                    LookingAtShop(hit);
+
+                    return hit.transform;
                 default:
                     ore = null;
                     mineText.gameObject.SetActive(false);
@@ -216,6 +237,9 @@ public class Player : MonoBehaviour
 
     private void LookingAtOre()
     {
+        if (!gameManager.GetCanMove()) return;
+
+
         tool = GameObject.FindGameObjectWithTag("Tool").GetComponent<Tool>();
         if (!tool) return;
 
@@ -238,6 +262,16 @@ public class Player : MonoBehaviour
             gameManager.currentNPC = hit.collider.GetComponent<NPC>();
             gameManager.ResetButtons(bgTransform);
             gameManager.SetCanMove(false);
+        }
+    }
+
+    private void LookingAtShop(RaycastHit hit)
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            gameManager.SetCanMove(!gameManager.GetCanMove());
+
+            hit.transform.GetComponent<Shop>().ShopThings();
         }
     }
 

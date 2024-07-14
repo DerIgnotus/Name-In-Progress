@@ -122,7 +122,7 @@ public class Ore : MonoBehaviour
         gameManager.updateInventory.Invoke();
         gameManager.updateQuests.Invoke();
 
-        if (!gameManager.currentOven) return;
+        if (gameManager.ovens.Count == 0) return;
 
         foreach (Oven oven in gameManager.ovens)
         {
