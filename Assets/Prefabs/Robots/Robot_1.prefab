@@ -9,6 +9,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0eaf5dea3b359824da147f3afa73c5dd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
@@ -87,7 +99,6 @@ MonoBehaviour:
   miningLevel: 1
   energyMax: 1
   icon: {fileID: 21300000, guid: f75e2b1809ad796469251378de80ccb1, type: 3}
-  description: Basic Robot. Doing everything slow and bad!
   rarity: Common
   level: 1
   circleRadiusMin: 1.25

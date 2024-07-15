@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     private float currentMiningTime;
     private Transform ore;
     private bool dispalyingQuests = false;
+    private bool ovenOpen = false;
 
     private void Start()
     {
@@ -46,6 +47,18 @@ public class Player : MonoBehaviour
             else if (LookingAt().tag == "Ore")
             {
                 OpenOreManagement();
+            }
+            else if (LookingAt().tag == "Oven")
+            {
+                LookingAtOven(LookingAt());
+            }
+            else if (LookingAt().tag == "Shop")
+            {
+                LookingAtShop(LookingAt());
+            }
+            else if (LookingAt().tag == "Npc")
+            {
+                LookingAtNPC(LookingAt());
             }
         }
 
@@ -152,6 +165,7 @@ public class Player : MonoBehaviour
 
                     ore = hit.collider.transform;
                     gameManager.currentOre = ore;
+                    gameManager.currentOven = null;
 
                     LookingAtOre();
 
@@ -161,7 +175,9 @@ public class Player : MonoBehaviour
                     ovenText.gameObject.SetActive(false);
                     npcText.gameObject.SetActive(true);
 
-                    LookingAtNPC(hit);
+                    gameManager.currentOven = null;
+
+                    //LookingAtNPC(hit.transform);
 
                     return hit.transform;
                 case "Oven":
@@ -169,7 +185,7 @@ public class Player : MonoBehaviour
                     npcText.gameObject.SetActive(false);
                     ovenText.gameObject.SetActive(true);
 
-                    LookingAtOven(hit.transform);
+                    //LookingAtOven(hit.transform);
 
                     return hit.transform;
                 case "Shop":
@@ -177,7 +193,9 @@ public class Player : MonoBehaviour
                     npcText.gameObject.SetActive(false);
                     ovenText.gameObject.SetActive(true);
 
-                    LookingAtShop(hit);
+                    gameManager.currentOven = null;
+
+                    //LookingAtShop(hit.transform);
 
                     return hit.transform;
                 default:
@@ -186,11 +204,14 @@ public class Player : MonoBehaviour
                     npcText.gameObject.SetActive(false);
                     ovenText.gameObject.SetActive(false);
 
+                    gameManager.currentOven = null;
+
                     return null;
             }
         }
         else
         {
+            gameManager.currentOven = null;
             AllUIOff();
             return null;
         }
@@ -198,33 +219,39 @@ public class Player : MonoBehaviour
 
     private void LookingAtOven(Transform oven)
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        gameManager.currentOven = oven;
+
+        if (gameManager.GetInventory().gameObject.activeSelf)
         {
-            gameManager.currentOven = oven;
-
-            if (!gameManager.ovens.Contains(oven.GetComponent<Oven>()))
-            {
-                gameManager.ovens.Add(oven.GetComponent<Oven>());
-            }
-
-            if (gameManager.GetInventory().gameObject.activeSelf)
+            if (ovenOpen)
             {
                 gameManager.SetInventory(false);
-
-                gameManager.DisplayInventory();
-                gameManager.RemoveOres();
-
-                gameManager.SetCanMove(true);
+                ovenOpen = false;
+                return;
             }
-            else
+
+            if (gameManager.GetInventory().transform.GetChild(0).gameObject.activeSelf)
             {
-                gameManager.SetInventory(true);
-
                 gameManager.RemoveInventory();
-                gameManager.DisplayOres();
 
-                gameManager.SetCanMove(false);
+                gameManager.RemoveOres();
+                gameManager.DisplayOres();
+                ovenOpen = true;
             }
+            else if (gameManager.GetInventory().transform.GetChild(1).gameObject.activeSelf)
+            {
+                gameManager.RemoveOres();
+                gameManager.DisplayOres();
+                ovenOpen = true;
+            }
+        }
+        else
+        {
+            gameManager.SetInventory(true);
+
+            gameManager.RemoveOres();
+            gameManager.DisplayOres();
+            ovenOpen = true;
         }
     }
 
@@ -254,25 +281,20 @@ public class Player : MonoBehaviour
         else currentMiningTime -= Time.deltaTime;
     }
 
-    private void LookingAtNPC(RaycastHit hit)
+    private void LookingAtNPC(Transform hit)
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            bgTransform.gameObject.SetActive(true);
-            gameManager.currentNPC = hit.collider.GetComponent<NPC>();
-            gameManager.ResetButtons(bgTransform);
-            gameManager.SetCanMove(false);
-        }
+        bgTransform.gameObject.SetActive(true);
+        gameManager.currentNPC = hit.GetComponent<NPC>();
+        gameManager.ResetButtons(bgTransform);
+        gameManager.SetCanMove(false);
+
     }
 
-    private void LookingAtShop(RaycastHit hit)
+    private void LookingAtShop(Transform hit)
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            gameManager.SetCanMove(!gameManager.GetCanMove());
+        gameManager.SetCanMove(!gameManager.GetCanMove());
 
-            hit.transform.GetComponent<Shop>().ShopThings();
-        }
+        hit.GetComponent<Shop>().ShopThings();
     }
 
     private void Mine(Transform ore)

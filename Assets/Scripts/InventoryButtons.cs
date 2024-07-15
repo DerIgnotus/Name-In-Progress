@@ -68,14 +68,6 @@ public class InventoryButtons : MonoBehaviour
         gameManager.DisplayAutoMiners();
     }
 
-    public void BuyAutoMiner()
-    {
-        if (gameManager.maxAutoMiners <= gameManager.autoMiners.Count) return;
-
-        gameManager.AddAutoMiner();
-        gameManager.UpdateAutoMinerDisplay();
-    }
-
     public void SetAutoMinerTarget()
     {
         AutoMiner autoMiner = gameManager.autoMiners[whichAutoMiner];

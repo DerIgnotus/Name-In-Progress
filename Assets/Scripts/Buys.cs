@@ -22,4 +22,10 @@ public class Buys : MonoBehaviour
         gameManager.AddRobot();
         gameManager.updateShop = true;
     }
+
+    public void BuyAutoMiner()
+    {
+        gameManager.AddAutoMiner();
+        gameManager.updateShop = true;
+    }
 }
