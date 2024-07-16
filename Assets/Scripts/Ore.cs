@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Ore : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class Ore : MonoBehaviour
     [SerializeField] private int harvestAmount;
     [SerializeField] private float untilNextMine;
     [SerializeField] private string oreName;
+    [SerializeField] private GameObject flyingText;
 
     [SerializeField] private Item item_1;
     [SerializeField] private OreScriptableObject ore_1;
@@ -20,6 +23,8 @@ public class Ore : MonoBehaviour
     private float currentUntilNextMine;
     private float currentHarvestTime;
     private GameManager gameManager;
+    private Renderer oreRenderer;
+    private Color originalColor;
 
     private void Start()
     {
@@ -49,6 +54,12 @@ public class Ore : MonoBehaviour
 
         currentUntilNextMine = 0;
         currentHarvestTime = harvestTime;
+
+        oreRenderer = GetComponent<Renderer>();
+        if (oreRenderer != null)
+        {
+            originalColor = oreRenderer.material.color;
+        }
     }
 
     private void Update()
@@ -56,6 +67,25 @@ public class Ore : MonoBehaviour
         if (currentUntilNextMine > 0)
         {
             currentUntilNextMine -= Time.deltaTime;
+        }
+
+        UpdateOreColor();
+    }
+
+    private void UpdateOreColor()
+    {
+        if (oreRenderer != null)
+        {
+            if (currentUntilNextMine > 0)
+            {
+                // Blend between the original color and red
+                oreRenderer.material.color = Color.Lerp(originalColor, Color.red, 0.75f);
+            }
+            else
+            {
+                // Restore the original color
+                oreRenderer.material.color = originalColor;
+            }
         }
     }
 
@@ -105,6 +135,8 @@ public class Ore : MonoBehaviour
         gameManager.AddItem(item_1, 1);
         gameManager.AddOre(ore_1, 1, gameManager.GetOres());
 
+        Mined(1 * harvestAmount);
+
         gameManager.updateInventory.Invoke();
         gameManager.updateOres.Invoke();
         gameManager.updateQuests.Invoke();
@@ -118,6 +150,7 @@ public class Ore : MonoBehaviour
         oreHarvested.Invoke(oreName);
 
         gameManager.AddItem(item_1, 1 * harvestAmount);
+        Mined(1 * harvestAmount);
 
         gameManager.updateInventory.Invoke();
         gameManager.updateQuests.Invoke();
@@ -131,6 +164,16 @@ public class Ore : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void Mined(int amount)
+    {
+        GameObject textObject = Instantiate(flyingText, transform.position, Quaternion.identity);
+        string text;
+        text = oreName + ": " + amount.ToString() + "\n" + item_1.GetItemName() + ": 1";
+
+        TextMeshPro textMeshPro = textObject.transform.GetChild(0).GetComponent<TextMeshPro>();
+        textMeshPro.text = text;
     }
 
     public bool CanMine()

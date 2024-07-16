@@ -114,6 +114,7 @@ MonoBehaviour:
   harvestAmount: 1
   untilNextMine: 5
   oreName: StandartOre
+  flyingText: {fileID: 4890611394468417751, guid: d5c07c4c4b94b1a4cb6db325c3ad2bce, type: 3}
   item_1: {fileID: 11400000, guid: 76733f911980a7b4585aecb35c4a5dc1, type: 2}
   ore_1: {fileID: 11400000, guid: d5a1149ba84240046ae056ba0a1c13b1, type: 2}
   oreHarvested:

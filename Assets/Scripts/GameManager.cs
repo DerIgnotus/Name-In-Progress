@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Price> autoMinerPrices;
     [SerializeField] private List<Price> ovenPrices;
     [SerializeField] private List<Price> robotPrices;
+    [SerializeField] private GameObject robotUpgradeButtons;
+    [SerializeField] private GameObject autoMinersUpgradeButtons;
+    [SerializeField] private GameObject upgradePanel;
 
     public int money { get; private set; }
     public NPC currentNPC { get; set; }
@@ -30,6 +33,8 @@ public class GameManager : MonoBehaviour
     private int currentRobots = 0;
     public bool updateShop { get; set; } = false;
     public bool lookAroundRightClick { get; set; } = false;
+    public int whichRobot { get; set; }
+    public int whichAutoMiner { get; set; }
 
 
     private bool canMove = true;
@@ -307,6 +312,17 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    public bool OnlyMoneyCanBuy(int price)
+    {
+        if (money < price)
+        {
+            Debug.Log("Not enough money");
+            return false;
+        }
+
+        return true;
+    }
+
     public void Buy(Price price)
     {
         AddMoney(-price.GetPriceData().price);
@@ -315,6 +331,11 @@ public class GameManager : MonoBehaviour
         {
             inventory.RemoveItem(item.item.GetItemName(), item.amount);
         }
+    }
+
+    public void OnlyMoneyBuy(int price)
+    {
+        AddMoney(-price);
     }
 
     public void AddOven()
@@ -327,6 +348,45 @@ public class GameManager : MonoBehaviour
 
             currentOvens++;
         }
+    }
+
+
+
+    // UPGRADES //
+
+    public void OpenCloseUpgradeStation()
+    {
+        inventory.OpenCloseUpgradeStation();
+    }
+
+    public void OpenRobotUpgrades()
+    {
+        inventory.DisplayRobotUpgrades();
+    }
+
+    public void OpenAutoMinerUpgrades()
+    {
+        inventory.DisplayAutoMinerUpgrades();
+    }
+
+    public void OpenPlayerUpgrades()
+    {
+        //inventory.DisplayPlayerUpgrades();
+    }
+
+    public GameObject GetRobotUpgradeButtons()
+    {
+        return robotUpgradeButtons;
+    }
+
+    public GameObject GetAutoMinerUpgradeButtons()
+    {
+        return autoMinersUpgradeButtons;
+    }
+
+    public GameObject GetUpgradePanel()
+    {
+        return upgradePanel;
     }
 }
 

@@ -9,6 +9,9 @@ public class AutoMiner : MonoBehaviour
     [SerializeField] private float autoMinerProductionSpeed;
     [SerializeField] private int autoMinerProductionRate;
 
+    public int whichProductionSpeedLevel { get; set; }
+    public int whichProductionRateLevel { get; set; }
+
     public Ore targetedOre { get; set; }
 
     private float autoMinerProductionTimer;
@@ -53,5 +56,15 @@ public class AutoMiner : MonoBehaviour
     public Sprite GetSprite()
     {
         return autoMinerSprite;
+    }
+
+    public void SetProductionSpeed(float amount)
+    {
+        autoMinerProductionSpeed = amount;
+    }
+
+    public void SetProductionRate(int amount)
+    {
+        autoMinerProductionRate = amount;
     }
 }

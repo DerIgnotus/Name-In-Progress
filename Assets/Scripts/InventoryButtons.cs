@@ -31,7 +31,7 @@ public class InventoryButtons : MonoBehaviour
     {
         Robot robot = gameManager.robots[whichRobot];
 
-        robot.targetedOre = gameManager.currentOre;
+        robot.SetTargetedOre(gameManager.currentOre);
 
         gameManager.UpdateRobotDisplay();
     }
@@ -75,5 +75,20 @@ public class InventoryButtons : MonoBehaviour
         autoMiner.targetedOre = gameManager.currentOre.GetComponent<Ore>();
 
         gameManager.UpdateAutoMinerDisplay();
+    }
+
+    public void OpenRobotUpgrades()
+    {
+        gameManager.OpenRobotUpgrades();
+    }
+
+    public void OpenAutoMinerUpgrades()
+    {
+        gameManager.OpenAutoMinerUpgrades();
+    }
+
+    public void OpenPlayerUpgrades()
+    {
+
     }
 }

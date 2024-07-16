@@ -60,6 +60,10 @@ public class Player : MonoBehaviour
             {
                 LookingAtNPC(LookingAt());
             }
+            else if (LookingAt().tag == "UpgradeStation")
+            {
+                LookingAtUpgradeStation();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -198,6 +202,14 @@ public class Player : MonoBehaviour
                     //LookingAtShop(hit.transform);
 
                     return hit.transform;
+                case "UpgradeStation":
+                    mineText.gameObject.SetActive(false);
+                    npcText.gameObject.SetActive(false);
+                    ovenText.gameObject.SetActive(true);
+
+                    gameManager.currentOven = null;
+
+                    return hit.transform;
                 default:
                     ore = null;
                     mineText.gameObject.SetActive(false);
@@ -304,5 +316,10 @@ public class Player : MonoBehaviour
         {
             oreScript.Harvest(1 * tool.GetHarvestDamage());
         }
+    }
+
+    private void LookingAtUpgradeStation()
+    {
+        gameManager.OpenCloseUpgradeStation();
     }
 }

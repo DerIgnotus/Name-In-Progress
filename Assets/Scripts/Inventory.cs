@@ -27,6 +27,11 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform oreDisplay;
     [SerializeField] private Transform buyAutoMinerButton;
 
+    [Header("Upgrades")]
+    [SerializeField] private Transform upgrades;
+    [SerializeField] private Transform robotUpgradePrefab;
+    [SerializeField] private Transform autoMinerUpgradePrefab;
+
 
     [SerializeField] private Transform inventory;
 
@@ -34,7 +39,6 @@ public class Inventory : MonoBehaviour
     private Dictionary<string, OreScript> ores = new Dictionary<string, OreScript>();
 
     private GameManager gameManager;
-
 
 
 
@@ -466,5 +470,103 @@ public class Inventory : MonoBehaviour
     public List<NPC> GetNPCs()
     {
         return gameManager.npcs;
+    }
+
+
+
+
+    // UPGRADES //
+
+    public void DisplayRobotUpgrades()
+    {
+        int i = 0;
+
+        upgrades.GetChild(1).gameObject.SetActive(false);
+        upgrades.GetChild(2).gameObject.SetActive(false);
+
+        Transform robotsTransform = upgrades.GetChild(0);
+        robotsTransform.gameObject.SetActive(true);
+
+        foreach (Transform robot in robotsTransform.GetChild(0).GetChild(0))
+        {
+            Destroy(robot.gameObject);
+        }
+
+        foreach (Robot robot in gameManager.robots)
+        {
+            GameObject robotObject = Instantiate(robotUpgradePrefab.gameObject, robotsTransform.GetChild(0).GetChild(0));
+            Transform robotTransform = robotObject.transform;
+
+            robotTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = robot.GetRarity() + "      |      " + robot.GetLevel();
+            robotTransform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "Mining Speed: " + robot.GetHarvestSpeed();
+            robotTransform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = "Mining Amount: " + robot.GetHarvestAmount();
+            robotTransform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().text = "Mining Level: " + robot.GetMiningLevel();
+            robotTransform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().text = "Movement Speed: " + robot.GetMoveSpeed();
+            robotTransform.GetChild(5).GetComponent<TMPro.TextMeshProUGUI>().text = "Max Energy: " + robot.GetMaxEnergy();
+            robotTransform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().text = "Charging Speed: " + robot.GetChargingSpeed();
+
+            robotObject.GetComponent<Upgrades>().whichRobot = i;
+
+            i++;
+        }
+    }
+
+    public void DisplayAutoMinerUpgrades()
+    {
+        int i = 0;
+
+        upgrades.GetChild(0).gameObject.SetActive(false);
+        upgrades.GetChild(2).gameObject.SetActive(false);
+
+        Transform autoMinersTransform = upgrades.GetChild(1);
+        autoMinersTransform.gameObject.SetActive(true);
+
+        foreach (Transform child in autoMinersTransform.GetChild(0).GetChild(0))
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (AutoMiner autoMiner in gameManager.autoMiners)
+        {
+            GameObject autoMinerObject = Instantiate(autoMinerUpgradePrefab.gameObject, autoMinersTransform.GetChild(0).GetChild(0));
+            Transform autoMinerTransform = autoMinerObject.transform;
+
+            autoMinerTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Level: " + autoMiner.GetAutoMinerLevel().ToString();
+            autoMinerTransform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "Production Speed: " + autoMiner.GetAutoMinerProductionSpeed().ToString();
+            autoMinerTransform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = "Prouction Amount: " + autoMiner.GetAutoMinerProductionRate().ToString();
+
+            autoMinerObject.GetComponent<Upgrades>().whichAutoMiner = i;
+
+            i++;
+        }
+    }
+
+    public void OpenCloseUpgradeStation()
+    {
+        if (upgrades.gameObject.activeSelf)
+        {
+            upgrades.gameObject.SetActive(false);
+            gameManager.SetCanMove(true);
+        }
+        else
+        {
+            upgrades.gameObject.SetActive(true);
+            gameManager.SetCanMove(false);
+
+            UpdateRobotUpgradesDisplay();
+        }
+    }
+
+    private void UpdateRobotUpgradesDisplay()
+    {
+        if (upgrades.GetChild(0).gameObject.activeSelf)
+        {
+            DisplayRobotUpgrades();
+        }
+        else
+        {
+            DisplayRobotUpgrades();
+            upgrades.GetChild(0).gameObject.SetActive(false);
+        }
     }
 }

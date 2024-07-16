@@ -10,6 +10,7 @@ TagManager:
   - Npc
   - Oven
   - Shop
+  - UpgradeStation
   layers:
   - Default
   - TransparentFX

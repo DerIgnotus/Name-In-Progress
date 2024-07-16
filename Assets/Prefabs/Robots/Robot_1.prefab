@@ -97,7 +97,9 @@ MonoBehaviour:
   harvestAmount: 1
   harvestDamage: 1
   miningLevel: 1
-  energyMax: 1
+  energyMax: 20
+  chargingSpeed: 1
+  moveSpeed: 3
   icon: {fileID: 21300000, guid: f75e2b1809ad796469251378de80ccb1, type: 3}
   rarity: Common
   level: 1

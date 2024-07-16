@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Invector;
 using UnityEngine;
 
 public class Robot : MonoBehaviour
@@ -11,6 +10,8 @@ public class Robot : MonoBehaviour
     [SerializeField] private float harvestDamage;
     [SerializeField] private float miningLevel;
     [SerializeField] private float energyMax;
+    [SerializeField] private float chargingSpeed;
+    [SerializeField] private float moveSpeed;
 
     [SerializeField] private Sprite icon;
     [SerializeField] private string rarity;
@@ -25,13 +26,22 @@ public class Robot : MonoBehaviour
     [SerializeField] private float verticalSpeedMin = 1f;
     [SerializeField] private float verticalAmplitude = 0.3f;
 
-    public Transform targetedOre { get; set; }
+    public Transform targetedOre { get; private set; }
+
+    public int harvestSpeedUpgradeLevel { get; set; }
+    public int harvestAmountUpgradeLevel { get; set; }
+    public int miningLevelUpgradeLevel { get; set; }
+    public int energyMaxUpgradeLevel { get; set; }
+    public int chargingSpeedUpgradeLevel { get; set; }
+    public int moveSpeedUpgradeLevel { get; set; }
 
     private float circleSpeed;
     private float verticalSpeed;
     private float energy;
     private float currentHarvestTime;
     private float circleRadius;
+    private bool charging = false;
+    private bool reachedOre = false;
 
     void Start()
     {
@@ -50,23 +60,51 @@ public class Robot : MonoBehaviour
         circleRadius = Random.Range(circleRadiusMin, circleRadiusMax);
         circleSpeed = Random.Range(circleSpeedMin, circleSpeedMax);
         verticalSpeed = Random.Range(verticalSpeedMin, verticalSpeedMax);
+
+        energy = energyMax;
     }
 
     void Update()
     {
-        if (targetedOre != null)
+        if (charging)
         {
-            CircleAroundOre();
+            Charge();
+            return;
+        }
 
-            if (currentHarvestTime > 0)
+        if (targetedOre == null) return;
+
+        if (!reachedOre)
+        {
+            if (Vector3.Distance(transform.position, targetedOre.position) > 1.5f)
             {
-                currentHarvestTime -= Time.deltaTime;
+                Vector3 directionToOre = (targetedOre.position - transform.position).normalized;
+
+                transform.position += directionToOre * moveSpeed * Time.deltaTime;
+                return;
             }
-            else
-            {
-                TryToMineOre();
-                currentHarvestTime = harvestSpeed;
-            }
+        }
+
+        reachedOre = true;
+
+        CircleAroundOre();
+
+        if (currentHarvestTime > 0)
+        {
+            currentHarvestTime -= Time.deltaTime;
+        }
+        else
+        {
+            TryToMineOre();
+            currentHarvestTime = harvestSpeed;
+        }
+
+        energy -= Time.deltaTime;
+
+        if (energy <= 0)
+        {
+            energy = 0;
+            charging = true;
         }
     }
 
@@ -92,6 +130,30 @@ public class Robot : MonoBehaviour
         }
     }
 
+    private void Charge()
+    {
+        charging = true;
+
+        if (Vector3.Distance(transform.position, transform.parent.position) > 0.1f)
+        {
+            Vector3 directionToCharger = (transform.parent.position - transform.position).normalized;
+
+            transform.position += directionToCharger * moveSpeed * Time.deltaTime;
+            return;
+        }
+
+        if (energy < energyMax)
+        {
+            energy += chargingSpeed * Time.deltaTime;
+        }
+        else
+        {
+            energy = energyMax;
+            charging = false;
+            reachedOre = false;
+        }
+    }
+
     private void MineOre(Ore oreScript)
     {
         oreScript.HarvestedByRobot(1 * harvestDamage);
@@ -110,5 +172,70 @@ public class Robot : MonoBehaviour
     public int GetLevel()
     {
         return level;
+    }
+
+    public void SetTargetedOre(Transform ore)
+    {
+        reachedOre = false;
+        targetedOre = ore;
+    }
+
+    public float GetHarvestSpeed()
+    {
+        return harvestSpeed;
+    }
+
+    public float GetHarvestAmount()
+    {
+        return harvestAmount;
+    }
+    public float GetMiningLevel()
+    {
+        return miningLevel;
+    }
+
+    public float GetMaxEnergy()
+    {
+        return energyMax;
+    }
+
+    public float GetChargingSpeed()
+    {
+        return chargingSpeed;
+    }
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
+
+    public void SetHarvestSpeed(float value)
+    {
+        harvestSpeed = value;
+    }
+
+    public void SetHarvestAmount(float value)
+    {
+        harvestAmount = value;
+    }
+
+    public void SetMiningLevel(float value)
+    {
+        miningLevel = value;
+    }
+
+    public void SetMaxEnergy(float value)
+    {
+        energyMax = value;
+    }
+
+    public void SetChargingSpeed(float value)
+    {
+        chargingSpeed = value;
+    }
+
+    public void SetMoveSpeed(float value)
+    {
+        moveSpeed = value;
     }
 }
