@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Upgrades : MonoBehaviour
 {
+    [SerializeField] private GameObject equipmentBuy;
+    [SerializeField] private Price equipmentPrice;
+
     public int whichRobot { get; set; }
     public int whichAutoMiner { get; set; }
+
+    private bool isBought = false;
 
     private GameManager gameManager;
     private Prices prices;
@@ -213,4 +219,33 @@ public class Upgrades : MonoBehaviour
         UpgradeAutoMiner();
     }
 
+    public void BuyEquipment()
+    {
+        if (isBought)
+        {
+            gameManager.Equip(equipmentBuy);
+            ChangeToGreen();
+            return;
+        }
+
+        if (!gameManager.CanBuy(equipmentPrice)) return;
+
+        gameManager.Buy(equipmentPrice);
+
+        isBought = true;
+
+        gameManager.Equip(equipmentBuy);
+
+        ChangeToGreen();
+    }
+
+    private void ChangeToGreen()
+    {
+        Button button = GetComponent<Button>(); // Get the Button component
+        ColorBlock cb = button.colors; // Get the current ColorBlock
+
+        cb.highlightedColor = Color.green; // Change the highlighted color to green
+
+        button.colors = cb;
+    }
 }

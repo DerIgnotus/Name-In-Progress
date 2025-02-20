@@ -551,6 +551,7 @@ public class Inventory : MonoBehaviour
         else
         {
             upgrades.gameObject.SetActive(true);
+            inventory.gameObject.SetActive(false);
             gameManager.SetCanMove(false);
 
             UpdateRobotUpgradesDisplay();
@@ -566,7 +567,16 @@ public class Inventory : MonoBehaviour
         else
         {
             DisplayRobotUpgrades();
-            upgrades.GetChild(0).gameObject.SetActive(false);
+            upgrades.GetChild(0).gameObject.SetActive(true);
+            upgrades.GetChild(1).gameObject.SetActive(false);
+            upgrades.GetChild(2).gameObject.SetActive(false);
         }
+    }
+
+    public void DisplayPlayerUpgrades()
+    {
+        upgrades.GetChild(0).gameObject.SetActive(false);
+        upgrades.GetChild(1).gameObject.SetActive(false);
+        upgrades.GetChild(2).gameObject.SetActive(true);
     }
 }

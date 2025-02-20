@@ -89,6 +89,6 @@ public class InventoryButtons : MonoBehaviour
 
     public void OpenPlayerUpgrades()
     {
-
+        gameManager.OpenPlayerUpgrades();
     }
 }

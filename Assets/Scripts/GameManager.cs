@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject robotUpgradeButtons;
     [SerializeField] private GameObject autoMinersUpgradeButtons;
     [SerializeField] private GameObject upgradePanel;
+    [SerializeField] private GameObject pricePanel;
 
     public int money { get; private set; }
     public NPC currentNPC { get; set; }
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
     public int whichRobot { get; set; }
     public int whichAutoMiner { get; set; }
 
+    private Transform tools;
+
 
     private bool canMove = true;
 
@@ -52,6 +55,8 @@ public class GameManager : MonoBehaviour
         updateQuests.AddListener(inventory.UpdateQuests);
         updateInventory.AddListener(inventory.UpdateItems);
         updateOres.AddListener(inventory.UpdateOres);
+
+        tools = GameObject.Find("Tools").transform;
 
         AddOven();
 
@@ -371,7 +376,7 @@ public class GameManager : MonoBehaviour
 
     public void OpenPlayerUpgrades()
     {
-        //inventory.DisplayPlayerUpgrades();
+        inventory.DisplayPlayerUpgrades();
     }
 
     public GameObject GetRobotUpgradeButtons()
@@ -387,6 +392,41 @@ public class GameManager : MonoBehaviour
     public GameObject GetUpgradePanel()
     {
         return upgradePanel;
+    }
+
+    public GameObject GetPricePanel()
+    {
+        return pricePanel;
+    }
+
+    public void Equip(GameObject equip)
+    {
+        if (equip.GetComponent<Tool>())
+        {
+            EquipTool(equip, equip.GetComponent<Tool>());
+            return;
+        }
+
+        if (equip.GetComponent<Armor>())
+        {
+            EquipArmor(equip, equip.GetComponent<Armor>());
+            return;
+        }
+    }
+
+    private void EquipTool(GameObject equip, Tool tool)
+    {
+        foreach (Transform child in tools)
+        {
+            Destroy(child.gameObject);
+        }
+
+        Instantiate(equip, tools);
+    }
+
+    private void EquipArmor(GameObject equip, Armor armor)
+    {
+
     }
 }
 
